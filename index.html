@@ -1,22 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <!-- ============================================= -->
-  <!-- META: Configuración básica y responsividad     -->
-  <!-- ============================================= -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>Tú y Yo</title>
 
-  <!-- Tipografías desde Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!--
-    Se agrega "Caveat" (weights 500/600/700): es la tipografía tipo
-    "escritura a mano" que se ve en tu foto de referencia (el texto
-    "TENEMOS EL AMOR MÁS BONITO..."). Se usa para el texto narrativo
-    y para la leyenda opcional dentro de la imagen sorpresa.
-  -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@0;1&family=Montserrat:wght@300;400&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
 
   <style>
@@ -73,16 +63,9 @@
 
     .delay-1 { transition-delay: 0.2s; }
     .delay-2 { transition-delay: 0.8s; }
-    /* delay-3 ya no se usa en el texto narrativo: ahora ese elemento se
-       revela letra por letra con JavaScript (ver más abajo). Se deja la
-       clase por si la quieres reutilizar en otro elemento. */
-    .delay-3 { transition-delay: 1.4s; }
-    .delay-4 { transition-delay: 2.0s; }
-    .delay-5 { transition-delay: 2.6s; }
 
     /* ============================================= */
     /* ENCABEZADO: FECHA                              */
-    /* Tamaño aumentado de 1rem a 1.4rem              */
     /* ============================================= */
     .fecha {
       font-family: 'Playfair Display', serif;
@@ -91,14 +74,6 @@
       letter-spacing: 2px;
       text-transform: uppercase;
       color: #8a7f70;
-      -webkit-text-stroke: 0.8px #ffffff;
-      text-stroke: 0.8px #ffffff;
-      text-shadow:
-        -1px -1px 0 #fff, 1px -1px 0 #fff,
-        -1px 1px 0 #fff, 1px 1px 0 #fff,
-        0 -1px 0 #fff, 0 1px 0 #fff,
-        -1px 0 0 #fff, 1px 0 0 #fff;
-      paint-order: stroke fill;
     }
 
     /* ============================================= */
@@ -113,11 +88,6 @@
       align-items: center;
     }
 
-    /*
-      NUEVO: "marco-foto" envuelve la imagen principal para que se vea
-      como una fotografía real (ligera inclinación, borde y sombra
-      interior sutil), en vez de una simple imagen plana.
-    */
     .marco-foto {
       position: relative;
       background: #ffffff;
@@ -129,7 +99,6 @@
     }
 
     .marco-foto::after {
-      /* Sombra interior sutil, como si fuera papel fotográfico */
       content: "";
       position: absolute;
       inset: 6px;
@@ -143,15 +112,6 @@
       object-fit: cover;
       display: block;
       filter: saturate(1.04) contrast(1.02);
-
-      /*
-        ============================================
-        REEMPLAZAR AQUÍ: URL de la imagen de la pareja
-        Sustituye el valor de "src" más abajo (en el
-        elemento <img>) por la ruta o URL de tu foto.
-        Ejemplo: src="foto-pareja.jpg"
-        ============================================
-      */
     }
 
     .polaroid-nombres {
@@ -160,25 +120,11 @@
       padding: 16px 0 20px 0;
       color: #4a4a4a;
       letter-spacing: 1px;
-      -webkit-text-stroke: 0.8px #ffffff;
-      text-stroke: 0.8px #ffffff;
-      text-shadow:
-        -1px -1px 0 #fff, 1px -1px 0 #fff,
-        -1px 1px 0 #fff, 1px 1px 0 #fff,
-        0 -1px 0 #fff, 0 1px 0 #fff,
-        -1px 0 0 #fff, 1px 0 0 #fff;
-      paint-order: stroke fill;
-
-      /*
-        ============================================
-        EDITAR AQUÍ: Nombres de la pareja
-        ============================================
-      */
     }
 
     /* ============================================= */
     /* TEXTO NARRATIVO (LEYENDA)                      */
-    /* Tamaño reducido de 1.55rem a 1.25rem           */
+    /* Mantiene 'Times New Roman' original            */
     /* ============================================= */
     .texto-narrativo {
       font-family: 'Times New Roman', Times, serif;
@@ -187,14 +133,6 @@
       line-height: 1.5;
       color: #3a3a3a;
       padding: 0 10px;
-      -webkit-text-stroke: 1px #ffffff;
-      text-stroke: 1px #ffffff;
-      text-shadow:
-        -1px -1px 0 #fff, 1px -1px 0 #fff,
-        -1px 1px 0 #fff, 1px 1px 0 #fff,
-        0 -1px 0 #fff, 0 1px 0 #fff,
-        -1px 0 0 #fff, 1px 0 0 #fff;
-      paint-order: stroke fill;
     }
 
     /* Cada letra empieza invisible; JS le agrega "visible" en cadena */
@@ -214,14 +152,6 @@
       font-size: 1.7rem;
       letter-spacing: 1px;
       color: #4a4a4a;
-      -webkit-text-stroke: 1.2px #ffffff;
-      text-stroke: 1.2px #ffffff;
-      text-shadow:
-        -1px -1px 0 #fff, 1px -1px 0 #fff,
-        -1px 1px 0 #fff, 1px 1px 0 #fff,
-        0 -1px 0 #fff, 0 1px 0 #fff,
-        -1px 0 0 #fff, 1px 0 0 #fff;
-      paint-order: stroke fill;
       margin-top: 4px;
     }
 
@@ -232,8 +162,7 @@
 
     /* ============================================= */
     /* PIE DE PÁGINA: DIAGRAMA DE VENN / BOTÓN         */
-    /* Ahora es un <button> que abre el modal con la    */
-    /* imagen sorpresa, en vez de un enlace externo.    */
+    /* Con animación de latido integrada              */
     /* ============================================= */
     .footer-venn {
       display: flex;
@@ -259,6 +188,8 @@
     .venn-svg {
       width: 90px;
       height: 60px;
+      transform-origin: center;
+      animation: latido 1.2s infinite ease-in-out;
     }
 
     .venn-texto {
@@ -267,14 +198,15 @@
       letter-spacing: 3px;
       color: #8a7f70;
       text-transform: uppercase;
-      -webkit-text-stroke: 0.8px #ffffff;
-      text-stroke: 0.8px #ffffff;
-      text-shadow:
-        -1px -1px 0 #fff, 1px -1px 0 #fff,
-        -1px 1px 0 #fff, 1px 1px 0 #fff,
-        0 -1px 0 #fff, 0 1px 0 #fff,
-        -1px 0 0 #fff, 1px 0 0 #fff;
-      paint-order: stroke fill;
+    }
+
+    /* Animación de latido realista */
+    @keyframes latido {
+      0% { transform: scale(1); }
+      14% { transform: scale(1.1); }
+      28% { transform: scale(1); }
+      42% { transform: scale(1.1); }
+      70% { transform: scale(1); }
     }
 
     /* ============================================= */
@@ -310,14 +242,8 @@
       width: 100%;
       aspect-ratio: 1 / 1;
       overflow: hidden;
-      background: #17130f; /* evita flash blanco mientras el corazón es chico */
+      background: #17130f;
 
-      /*
-        Máscara con forma de corazón: al abrir el modal, "mask-size"
-        crece de un valor pequeño (apenas un corazoncito) hasta 300%,
-        lo que hace que la imagen se revele como si un corazón se
-        fuera expandiendo hasta cubrir toda la foto.
-      */
       -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 29.6"><path d="M23.6,0c-3,0-5.7,1.6-7.6,4.1C14.1,1.6,11.4,0,8.4,0C3.8,0,0,3.8,0,8.6c0,9,11.6,15.8,15.6,19.9c0.2,0.2,0.5,0.2,0.7,0C20.4,24.4,32,17.6,32,8.6C32,3.8,28.2,0,23.6,0z"/></svg>');
       mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 29.6"><path d="M23.6,0c-3,0-5.7,1.6-7.6,4.1C14.1,1.6,11.4,0,8.4,0C3.8,0,0,3.8,0,8.6c0,9,11.6,15.8,15.6,19.9c0.2,0.2,0.5,0.2,0.7,0C20.4,24.4,32,17.6,32,8.6C32,3.8,28.2,0,23.6,0z"/></svg>');
       -webkit-mask-repeat: no-repeat;
@@ -340,13 +266,6 @@
       height: 100%;
       object-fit: cover;
       display: block;
-
-      /*
-        ============================================
-        REEMPLAZAR AQUÍ: URL de la imagen "sorpresa"
-        que se abre al tocar el botón "Tú & Yo".
-        ============================================
-      */
     }
 
     .modal-caption {
@@ -358,22 +277,6 @@
       color: #3a3a3a;
       padding-top: 16px;
       line-height: 1.5;
-      -webkit-text-stroke: 1px #ffffff;
-      text-stroke: 1px #ffffff;
-      text-shadow:
-        -1px -1px 0 #fff, 1px -1px 0 #fff,
-        -1px 1px 0 #fff, 1px 1px 0 #fff,
-        0 -1px 0 #fff, 0 1px 0 #fff,
-        -1px 0 0 #fff, 1px 0 0 #fff;
-      paint-order: stroke fill;
-
-      /*
-        ============================================
-        EDITAR AQUÍ (opcional): texto que aparece debajo
-        de la imagen sorpresa, como en tu foto de
-        referencia. Déjalo vacío si no quieres leyenda.
-        ============================================
-      */
     }
 
     .modal-close {
@@ -413,12 +316,10 @@
 
   <div class="container">
 
-    <!-- FECHA: edita el texto de abajo con la fecha deseada -->
     <p class="fecha fade-in delay-1">
       09/05/2026
     </p>
 
-    <!-- FOTOGRAFÍA ESTILO POLAROID -->
     <div class="polaroid fade-in delay-2">
       <div class="marco-foto">
         <img
@@ -432,7 +333,6 @@
       </p>
     </div>
 
-    <!-- TEXTO NARRATIVO: se revela letra por letra vía JavaScript -->
     <p class="texto-narrativo">
       <em>En una leyenda japonesa.</em><br>
       Dice que dos personas destinadas a encontrarse<br>
@@ -447,12 +347,6 @@
       <span class="texto-ti">TI <span class="texto-corazon">♡</span></span>
     </p>
 
-    <!--
-      PIE DE PÁGINA: botón "Tú & Yo".
-      Antes era un enlace a un video externo; ahora abre un modal en
-      la misma página con una imagen sorpresa y una animación de
-      corazón que se va expandiendo hasta revelarla por completo.
-    -->
     <button
       type="button"
       class="footer-venn fade-in"
@@ -467,7 +361,6 @@
 
   </div>
 
-  <!-- MODAL: imagen sorpresa con revelado en forma de corazón -->
   <div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this) cerrarModal()">
     <div class="modal-content" onclick="event.stopPropagation()">
       <button class="modal-close" aria-label="Cerrar" onclick="cerrarModal()">✕</button>
@@ -476,10 +369,6 @@
           class="modal-image"
           src="ImagenPostPagina.jpeg"
           alt="Imagen sorpresa">
-        <!--
-          ↑ REEMPLAZAR AQUÍ: pon la ruta o URL de la imagen sorpresa
-          que quieres revelar dentro del corazón.
-        -->
       </div>
       <p class="modal-caption">
         Tenemos el amor más bonito.
@@ -489,12 +378,7 @@
   </div>
 
   <script>
-    /* ============================================= */
-    /* JAVASCRIPT                                     */
-    /* ============================================= */
-
-    // --- Envuelve cada letra de un elemento en <span class="letter"> ---
-    // Respeta las etiquetas internas (em, span) y no toca los <br>.
+    // --- Envuelve cada letra en <span class="letter"> ---
     function envolverLetras(nodo) {
       Array.from(nodo.childNodes).forEach((hijo) => {
         if (hijo.nodeType === Node.TEXT_NODE) {
@@ -514,27 +398,26 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
-      // Fade-in de la fecha y la foto principal
+      // Fade-in inicial
       requestAnimationFrame(() => {
         document.querySelectorAll('.fecha.fade-in, .polaroid.fade-in').forEach((el) => {
           el.classList.add('visible');
         });
       });
 
-      // Prepara el texto narrativo para el efecto "máquina de escribir"
+      // Animación de escritura
       const narrativo = document.querySelector('.texto-narrativo');
       envolverLetras(narrativo);
       const letras = narrativo.querySelectorAll('.letter');
 
-      const RETRASO_INICIAL = 1300; // ms antes de empezar a escribir
-      const VELOCIDAD = 14;         // ms entre cada letra (más rápido)
+      const RETRASO_INICIAL = 1300; 
+      const VELOCIDAD = 14;         
 
       setTimeout(() => {
         letras.forEach((letra, i) => {
           setTimeout(() => letra.classList.add('visible'), i * VELOCIDAD);
         });
 
-        // Una vez terminado el texto, aparece el botón "Tú & Yo"
         const tiempoTotal = letras.length * VELOCIDAD + 400;
         setTimeout(() => {
           document.querySelector('.footer-venn').classList.add('visible');
@@ -542,13 +425,11 @@
       }, RETRASO_INICIAL);
     });
 
-    // --- Modal con animación de corazón expandiéndose ---
+    // --- Control del Modal ---
     function abrirModal() {
       const overlay = document.getElementById('modalOverlay');
       overlay.style.display = 'flex';
       document.body.style.overflow = 'hidden';
-      // Doble requestAnimationFrame para asegurar que el navegador
-      // registre el estado inicial (corazón chico) antes de animar.
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           overlay.classList.add('open');
