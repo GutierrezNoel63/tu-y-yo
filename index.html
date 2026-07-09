@@ -50,7 +50,7 @@
     }
 
     /* ============================================= */
-    /* ANIMACIÓN FADE-IN PROGRESIVO                   */
+    /* ANIMACIÓN FADE-IN PROGRESIVO TEMPORAL          */
     /* ============================================= */
     .fade-in {
       opacity: 0;
@@ -124,7 +124,6 @@
 
     /* ============================================= */
     /* TEXTO NARRATIVO (LEYENDA)                      */
-    /* Mantiene 'Times New Roman' original            */
     /* ============================================= */
     .texto-narrativo {
       font-family: 'Times New Roman', Times, serif;
@@ -135,7 +134,7 @@
       padding: 0 10px;
     }
 
-    /* Cada letra empieza invisible; JS le agrega "visible" en cadena */
+    /* Cada letra empieza invisible en la pantalla de inicio */
     .letter {
       opacity: 0;
       transition: opacity 0.25s ease;
@@ -162,7 +161,6 @@
 
     /* ============================================= */
     /* PIE DE PÁGINA: DIAGRAMA DE VENN / BOTÓN         */
-    /* Con animación de latido integrada              */
     /* ============================================= */
     .footer-venn {
       display: flex;
@@ -200,7 +198,6 @@
       text-transform: uppercase;
     }
 
-    /* Animación de latido realista */
     @keyframes latido {
       0% { transform: scale(1); }
       14% { transform: scale(1.1); }
@@ -270,13 +267,35 @@
 
     .modal-caption {
       font-family: 'Times New Roman', Times, serif;
-      font-weight: 400;
-      font-style: italic;
-      font-size: 1.5rem;
+      font-weight: 500;
+      font-size: 1.25rem;
       text-align: center;
       color: #3a3a3a;
       padding-top: 16px;
       line-height: 1.5;
+    }
+
+    /* NUEVO EFECTO DESVANECIDO (FADE-IN) PARA LA FRASE */
+    .modal-frase-meses {
+      font-family: 'Times New Roman', Times, serif;
+      font-weight: 500;
+      font-size: 1.25rem; 
+      line-height: 1.5;
+      color: #3a3a3a;
+      text-align: center;
+      margin-top: 12px;
+      display: block;
+      
+      /* Inicia invisible y ligeramente desplazado hacia abajo */
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 1.2s ease-out, transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Clase activa que gatilla el desvanecido */
+    .modal-frase-meses.revelada {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .modal-close {
@@ -306,7 +325,7 @@
         width: 220px;
         height: 220px;
       }
-      .texto-narrativo {
+      .texto-narrativo, .modal-caption, .modal-frase-meses {
         font-size: 1.1rem;
       }
     }
@@ -374,12 +393,17 @@
         Tenemos el amor más bonito.
         <br>Gracias por compartir tu vida conmigo.
       </p>
+      <span class="modal-frase-meses" id="modalFrase">
+        Felices dos meses bebé
+      </span>
     </div>
   </div>
 
   <script>
-    // --- Envuelve cada letra en <span class="letter"> ---
-    function envolverLetras(nodo) {
+    let modalTimeout;
+
+    // --- Envuelve cada letra en <span class="letter"> (Solo para la pág. inicial) ---
+    function enviarLetrasPaginaPrincipal(nodo) {
       Array.from(nodo.childNodes).forEach((hijo) => {
         if (hijo.nodeType === Node.TEXT_NODE) {
           const texto = hijo.textContent;
@@ -392,7 +416,7 @@
           }
           hijo.replaceWith(frag);
         } else if (hijo.nodeType === Node.ELEMENT_NODE && hijo.tagName !== 'BR') {
-          envolverLetras(hijo);
+          enviarLetrasPaginaPrincipal(hijo);
         }
       });
     }
@@ -405,9 +429,9 @@
         });
       });
 
-      // Animación de escritura
+      // Animación de escritura de la página principal
       const narrativo = document.querySelector('.texto-narrativo');
-      envolverLetras(narrativo);
+      enviarLetrasPaginaPrincipal(narrativo);
       const letras = narrativo.querySelectorAll('.letter');
 
       const RETRASO_INICIAL = 1300; 
@@ -428,19 +452,37 @@
     // --- Control del Modal ---
     function abrirModal() {
       const overlay = document.getElementById('modalOverlay');
+      const frase = document.getElementById('modalFrase');
+      
+      // Reiniciar estado
+      frase.classList.remove('revelada');
+      clearTimeout(modalTimeout);
+
       overlay.style.display = 'flex';
       document.body.style.overflow = 'hidden';
+      
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           overlay.classList.add('open');
+          
+          // Aplica el desvanecido progresivo a los 300ms de abrirse
+          modalTimeout = setTimeout(() => {
+            frase.classList.add('revelada');
+          }, 300);
         });
       });
     }
 
     function cerrarModal() {
       const overlay = document.getElementById('modalOverlay');
+      const frase = document.getElementById('modalFrase');
+      
       overlay.classList.remove('open');
+      frase.classList.remove('revelada');
       document.body.style.overflow = '';
+      
+      clearTimeout(modalTimeout);
+
       setTimeout(() => {
         overlay.style.display = 'none';
       }, 500);
